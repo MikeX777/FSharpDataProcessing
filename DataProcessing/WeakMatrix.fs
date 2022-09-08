@@ -85,3 +85,40 @@ module WeakMatrix =
             | TwoDimMatrix tdm -> 
                 transpose (TwoDimMatrix tdm)
 
+    let multiplyColumnVectorByMatrix vector matrix =
+        match (vector,matrix) with
+        | (ColumnVector cv, TwoDimMatrix m) ->
+            if cv.Length <> m.Head.Length then Error { ErrorResponse.Message = Some "Vector and matrix cannot be multiplied." }
+            else
+                let rec loopMatrix acc matrix vector =
+                    match matrix with
+                    | [] -> acc
+                    | h::t -> loopMatrix (List.append acc [((List.zip h vector) |> List.sumBy (fun (a,b) -> a * b))]) t vector
+                loopMatrix [] m cv
+                |> createColumnMatix
+        | (_, _) -> Error { ErrorResponse.Message = Some "Not a supported vector and matrix for this function." }
+
+    let private multiplyRowVectoryByMatrix vector matrix =
+        0 |> succeed
+        //match (vector,matrix) with
+        //| (RowVector rv, TwoDimMatrix m) ->
+        //    rv 
+        //    |> transpose
+        //| (_, _) -> Error { ErrorResponse.Message = Some "Not a supported vector and matrix for this function." }
+
+    let private slowTwoDimMatrixMultiplication m1 m2 =
+        0 |> succeed
+
+    let slowMatrixMultiplication m1 m2 =
+        match (m1,m2) with
+        | (RowVector rv, TwoDimMatrix m) -> multiplyRowVectoryByMatrix rv m
+        | (TwoDimMatrix m, RowVector rv) -> multiplyRowVectoryByMatrix rv m
+        //| (ColumnVector cv, TwoDimMatrix m) -> multiplyColumnVectorByMatrix cv m
+        //| (TwoDimMatrix m, ColumnVector cv) -> multiplyColumnVectorByMatrix cv m
+        | (TwoDimMatrix m1, TwoDimMatrix m2) -> slowTwoDimMatrixMultiplication m1 m2
+        | (_, _) -> Error { ErrorResponse.Message = Some "Not a supported multiplication." }
+
+    let (<*>) matrix1 matrix2 =
+        slowMatrixMultiplication
+
+
