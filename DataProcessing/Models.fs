@@ -34,4 +34,4 @@ module Result =
         Success x
     
     let fail x =
-        Failure x  
+        Error x  

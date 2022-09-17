@@ -2,13 +2,18 @@
 
 module WeakMatrix =
 
-    open FSharp.Stats
     open DataProcessing.Result
 
     type WeakMatrix<'T> =
         | TwoDimMatrix of List<List<'T>>
         | ColumnVector of List<'T>
         | RowVector of List<'T>
+
+    type RowMultiplicationRecord<'T> =
+        {
+        Vector: WeakMatrix<'T> option
+        Matrix: WeakMatrix<'T> option
+        }
 
     let private validateTwoDimIsNotEmpty (toCreate:List<List<'T>>) : Result<List<List<'T>>, ErrorResponse> =
         if toCreate.IsEmpty then Error { ErrorResponse.Message = Some "No Rows found in Matrix." }
@@ -98,24 +103,41 @@ module WeakMatrix =
                 |> createColumnMatix
         | (_, _) -> Error { ErrorResponse.Message = Some "Not a supported vector and matrix for this function." }
 
-    let private multiplyRowVectoryByMatrix vector matrix =
-        0 |> succeed
-        //match (vector,matrix) with
-        //| (RowVector rv, TwoDimMatrix m) ->
-        //    rv 
-        //    |> transpose
-        //| (_, _) -> Error { ErrorResponse.Message = Some "Not a supported vector and matrix for this function." }
+    let private transposeRowOfRowMultipliaction vector =
+        match (vector |> transpose) with
+        | Success v -> { Vector = Some v; Matrix = None } |> succeed
+        | Error e -> Error { ErrorResponse.Message = Some $"Multiplication failed on Row Transpose with message: {e.Message}" }
+
+    let private transposeMatrixOfRowMultiplication matrix record =
+        match (matrix |> transpose) with
+        | Success m -> { Vector = record.Vector; Matrix = Some m } |> succeed
+        | Error e -> Error { ErrorResponse.Message = Some $"Mulitplication failed on Matrix Transpose with message: {e.Message}" }
+
+    let private unWrapRowMultiplicationRecord record =
+        match (record.Vector,record.Matrix) with
+        | (Some (ColumnVector c), Some (TwoDimMatrix m)) -> multiplyColumnVectorByMatrix (ColumnVector c) (TwoDimMatrix m)
+        | (_, _) -> Error { ErrorResponse.Message = Some "Error unwrapping record, passed invaild valis for column vector multiplication." }
+
+    let multiplyRowVectorByMatrix vector matrix =
+        match (vector,matrix) with
+        | (RowVector rv, TwoDimMatrix m) ->
+            RowVector rv
+            |> transposeRowOfRowMultipliaction
+            >>= transposeMatrixOfRowMultiplication matrix
+            >>= unWrapRowMultiplicationRecord
+            >>= transpose
+        | (_, _) -> Error { ErrorResponse.Message = Some "Not a supported vector and matrix for this function." }
 
     let private slowTwoDimMatrixMultiplication m1 m2 =
         0 |> succeed
 
     let slowMatrixMultiplication m1 m2 =
         match (m1,m2) with
-        | (RowVector rv, TwoDimMatrix m) -> multiplyRowVectoryByMatrix rv m
-        | (TwoDimMatrix m, RowVector rv) -> multiplyRowVectoryByMatrix rv m
-        //| (ColumnVector cv, TwoDimMatrix m) -> multiplyColumnVectorByMatrix cv m
-        //| (TwoDimMatrix m, ColumnVector cv) -> multiplyColumnVectorByMatrix cv m
-        | (TwoDimMatrix m1, TwoDimMatrix m2) -> slowTwoDimMatrixMultiplication m1 m2
+        | (RowVector rv, TwoDimMatrix m) -> multiplyRowVectorByMatrix (RowVector rv) (TwoDimMatrix m)
+        | (TwoDimMatrix m, RowVector rv) -> multiplyRowVectorByMatrix (RowVector rv) (TwoDimMatrix m)
+        | (ColumnVector cv, TwoDimMatrix m) -> multiplyColumnVectorByMatrix (ColumnVector cv) (TwoDimMatrix m)
+        | (TwoDimMatrix m, ColumnVector cv) -> multiplyColumnVectorByMatrix (ColumnVector cv) (TwoDimMatrix m)
+        //| (TwoDimMatrix m1, TwoDimMatrix m2) -> slowTwoDimMatrixMultiplication m1 m2
         | (_, _) -> Error { ErrorResponse.Message = Some "Not a supported multiplication." }
 
     let (<*>) matrix1 matrix2 =
