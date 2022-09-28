@@ -31,6 +31,23 @@ module CsvProcessing =
         else
             ("", lines) |> succeed
 
+    let swap x y (a: 'a []) =
+        let tmp = a.[x]
+        a.[x] <- a.[y]
+        a.[y] <- tmp
+
+    let shuffle (rand:System.Random) a =
+        Array.iteri (fun i _ -> a |> swap i (rand.Next(i, Array.length a))) a
+
+    let randomizeLines shuffleLines seed data =
+        if shuffleLines then
+            let rand = new System.Random(seed)
+            let (headers, lines) = data
+            shuffle rand lines
+            (headers, lines) |> succeed
+        else 
+            data |> succeed
+
     let parseDelimter delimiterChar (data:string) =
         (data.Split [|delimiterChar|]) |> Array.toList
 
@@ -43,10 +60,11 @@ module CsvProcessing =
         ((parseDelimter delimiterChar headers), (loop (lines |> Array.toList) List.empty)) |> succeed
 
 
-    let parseFile hasHeader delimterChar path =
+    let parseFile shuffleLines seed hasHeader delimterChar path =
         path |>
         getLines
         >>= validateNotEmpty hasHeader 
         >>= extractHeader hasHeader
+        >>= randomizeLines shuffleLines seed
         >>= parseDataTuple delimterChar
 

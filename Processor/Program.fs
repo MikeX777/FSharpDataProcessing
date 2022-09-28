@@ -13,7 +13,7 @@ let baseDirectory' = Directory.GetParent(baseDirectory)
 let filePath = "Data\Credit_N400_p9.csv"
 let fullPath = Path.Combine(baseDirectory, filePath)
 
-let parsed = parseFile true ',' fullPath
+let parsed = parseFile false 1500 true ',' fullPath
 let processed = parsed >>= preprocessData
 
 printfn "%A" processed
