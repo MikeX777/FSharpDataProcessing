@@ -34,4 +34,14 @@ module Result =
         Success x
     
     let fail x =
-        Error x  
+        Error x
+
+    let inline isSuccess x =
+        match x with 
+        | Success s -> true
+        | Error e -> false
+        
+    let inline isError x =
+        match x with 
+        | Success s -> true
+        | Error e -> false

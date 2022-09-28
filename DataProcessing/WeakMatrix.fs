@@ -47,12 +47,12 @@ module WeakMatrix =
             | Success s -> TwoDimMatrix s |> succeed
             | Error e -> Error e
 
-    let createColumnMatix<'T> (toCreate:List<'T>) =
+    let createColumnMatrix<'T> (toCreate:List<'T>) =
         match validateOneDimInput toCreate with
             | Success s -> ColumnVector s |> succeed
             | Error e -> Error e
             
-    let createRowMatix<'T> (toCreate:List<'T>) =
+    let createRowMatrix<'T> (toCreate:List<'T>) =
         match validateOneDimInput toCreate with
             | Success s -> RowVector s |> succeed
             | Error e -> Error e
@@ -68,8 +68,9 @@ module WeakMatrix =
                   let rec loop matrix partial = 
                     match matrix with
                     | [] -> partial
-                    | y::ys ->let newPartial = (y, partial) ||> List.map2(fun x y->x::y)
-                              loop ys newPartial
+                    | y::ys ->
+                        let newPartial = (y, partial) ||> List.map2(fun x y->x::y)
+                        loop ys newPartial
                   let length = List.length x
                   loop tdm (List.init length (fun _ -> [] ))
                   |> List.map(fun x->x |> List.rev)
@@ -100,7 +101,7 @@ module WeakMatrix =
                     | [] -> acc
                     | h::t -> loopMatrix (List.append acc [((List.zip h vector) |> List.sumBy (fun (a,b) -> a * b))]) t vector
                 loopMatrix [] m cv
-                |> createColumnMatix
+                |> createColumnMatrix
         | (_, _) -> Error { ErrorResponse.Message = Some "Not a supported vector and matrix for this function." }
 
     let private transposeRowOfRowMultipliaction vector =

@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31912.275
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "DataProcessing", "DataProcessing\DataProcessing.fsproj", "{2D4DFC0C-0B6C-4711-8EC9-58D6A14F06FF}"
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "DataProcessing", "DataProcessing\DataProcessing.fsproj", "{2D4DFC0C-0B6C-4711-8EC9-58D6A14F06FF}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "DataProcessing.Tests", "DataProcessing.Tests\DataProcessing.Tests.fsproj", "{56C5F9F2-2DBF-4FB2-B3D3-08217C20326B}"
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "DataProcessing.Tests", "DataProcessing.Tests\DataProcessing.Tests.fsproj", "{56C5F9F2-2DBF-4FB2-B3D3-08217C20326B}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Processor", "Processor\Processor.fsproj", "{D90E4012-675A-4E10-B3DB-82E81A999882}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{56C5F9F2-2DBF-4FB2-B3D3-08217C20326B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{56C5F9F2-2DBF-4FB2-B3D3-08217C20326B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{56C5F9F2-2DBF-4FB2-B3D3-08217C20326B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D90E4012-675A-4E10-B3DB-82E81A999882}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D90E4012-675A-4E10-B3DB-82E81A999882}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D90E4012-675A-4E10-B3DB-82E81A999882}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D90E4012-675A-4E10-B3DB-82E81A999882}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

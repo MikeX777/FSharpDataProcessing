@@ -17,8 +17,8 @@ module WeakMatrixColumnVectorMultiplicationTests =
         let expectedVector =    [64;154;244]
 
         let twoDimMatrix = createTwoDimMatrix twoDim
-        let columnMatrix = createColumnMatix columnVector
-        let expectedMatrix = createColumnMatix expectedVector
+        let columnMatrix = createColumnMatrix columnVector
+        let expectedMatrix = createColumnMatrix expectedVector
 
         // Act
         match (twoDimMatrix,columnMatrix) with
@@ -39,8 +39,8 @@ module WeakMatrixColumnVectorMultiplicationTests =
         let expectedVector =    [72;104;]
 
         let twoDimMatrix = createTwoDimMatrix twoDim
-        let columnMatrix = createColumnMatix columnVector
-        let expectedMatrix = createColumnMatix expectedVector
+        let columnMatrix = createColumnMatrix columnVector
+        let expectedMatrix = createColumnMatrix expectedVector
 
         // Act
         match (twoDimMatrix,columnMatrix) with
@@ -63,8 +63,8 @@ module WeakMatrixColumnVectorMultiplicationTests =
         let expectedVector =    [16;30;56;14;30]
         
         let twoDimMatrix = createTwoDimMatrix twoDim
-        let columnMatrix = createColumnMatix columnVector
-        let expectedMatrix = createColumnMatix expectedVector
+        let columnMatrix = createColumnMatrix columnVector
+        let expectedMatrix = createColumnMatrix expectedVector
 
         // Act
         match (twoDimMatrix,columnMatrix) with
@@ -88,7 +88,7 @@ module WeakMatrixColumnVectorMultiplicationTests =
         let expectedError =     Error { ErrorResponse.Message = Some "Vector and matrix cannot be multiplied." }
 
         let twoDimMatrix = createTwoDimMatrix twoDim
-        let columnMatrix = createColumnMatix columnVector
+        let columnMatrix = createColumnMatrix columnVector
 
         // Act
         match (twoDimMatrix,columnMatrix) with
@@ -110,7 +110,7 @@ module WeakMatrixColumnVectorMultiplicationTests =
         let rowVector =         [6;2;]
         
         let twoDimMatrix = createTwoDimMatrix twoDim
-        let rowMatrix = createRowMatix rowVector
+        let rowMatrix = createRowMatrix rowVector
         let expectedError = Error { ErrorResponse.Message = Some "Not a supported vector and matrix for this function." }
 
         // Act
@@ -158,8 +158,8 @@ module WeakMatrixRowVectorMultiplicationTests =
         let expectedVector =    [51;25;19;25]
 
         let twoDimMatrix = createTwoDimMatrix twoDim
-        let rowMatrix = createRowMatix rowVector
-        let expectedMatrix = createRowMatix expectedVector
+        let rowMatrix = createRowMatrix rowVector
+        let expectedMatrix = createRowMatrix expectedVector
 
         // Act
         match (twoDimMatrix,rowMatrix) with
@@ -182,8 +182,8 @@ module WeakMatrixRowVectorMultiplicationTests =
         let expectedVector =    [46;60;72;74;68]
 
         let twoDimMatrix = createTwoDimMatrix twoDim
-        let rowMatrix = createRowMatix rowVector
-        let expectedMatrix = createRowMatix expectedVector
+        let rowMatrix = createRowMatrix rowVector
+        let expectedMatrix = createRowMatrix expectedVector
 
         // Act
         match (twoDimMatrix,rowMatrix) with
@@ -209,8 +209,8 @@ module WeakMatrixRowVectorMultiplicationTests =
         let expectedVector =    [77;88;]
         
         let twoDimMatrix = createTwoDimMatrix twoDim
-        let rowMatrix = createRowMatix rowVector
-        let expectedMatrix = createRowMatix expectedVector
+        let rowMatrix = createRowMatrix rowVector
+        let expectedMatrix = createRowMatrix expectedVector
 
         // Act
         match (twoDimMatrix,rowMatrix) with
@@ -237,7 +237,7 @@ module WeakMatrixRowVectorMultiplicationTests =
         let expectedError =     Error { ErrorResponse.Message = Some "Vector and matrix cannot be multiplied." }
 
         let twoDimMatrix = createTwoDimMatrix twoDim
-        let rowMatrix = createRowMatix rowVector
+        let rowMatrix = createRowMatrix rowVector
 
         // Act
         match (twoDimMatrix,rowMatrix) with
@@ -259,7 +259,7 @@ module WeakMatrixRowVectorMultiplicationTests =
         let columnVector =         [6;2;2;6;3;]
         
         let twoDimMatrix = createTwoDimMatrix twoDim
-        let columnMatrix = createColumnMatix columnVector
+        let columnMatrix = createColumnMatrix columnVector
         let expectedError = Error { ErrorResponse.Message = Some "Not a supported vector and matrix for this function." }
 
         // Act
