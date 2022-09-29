@@ -24,8 +24,8 @@ module WeakMatrixTransposeTests =
         match testWeakMatrix with
         | Error e -> Assert.True(false, "Error creating matrix, false test.")
         | Success s ->
-            // Assert
             let testTranspose = transpose s
+            // Assert
             Assert.Equal(expectedWeakMatrix, testTranspose)
 
     [<Fact>]
@@ -47,8 +47,8 @@ module WeakMatrixTransposeTests =
         match testWeakMatrix with
         | Error e -> Assert.True(false, "Error creating matrix, false test.")
         | Success s ->
-            // Assert
             let testTranspose = transpose s
+            // Assert
             Assert.Equal(expectedWeakMatrix, testTranspose)
 
     [<Fact>]
@@ -69,8 +69,8 @@ module WeakMatrixTransposeTests =
         match testWeakMatrix with
         | Error e -> Assert.True(false, "Error creating matrix, false test.")
         | Success s ->
-            // Assert
             let testTranspose = transpose s
+            // Assert
             Assert.Equal(expectedWeakMatrix, testTranspose)
 
 

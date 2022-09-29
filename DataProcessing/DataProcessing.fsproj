@@ -8,6 +8,8 @@
   <ItemGroup>
     <Compile Include="Models.fs" />
     <Compile Include="WeakMatrix.fs" />
+    <Compile Include="CsvProcessing.fs" />
+    <Compile Include="MachineLearning.fs" />
   </ItemGroup>
 
   <ItemGroup>
