@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="WeakMatrixAdditionAndSubtractionTests.fs" />
     <Compile Include="WeakMatrixMultiplicationTests.fs" />
     <Compile Include="WeakMatrixVectorMultiplicationTests.fs" />
     <Compile Include="WeakMatrixTransposeTests.fs" />
