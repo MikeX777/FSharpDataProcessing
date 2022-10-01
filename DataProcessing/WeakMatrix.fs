@@ -164,4 +164,102 @@ module WeakMatrix =
 
     let (<*>) = slowMatrixMultiplication
 
+    let inline private validateListLength<'T> (list1:List<'T>) (list2:List<'T>) =
+        if (list1.Length = list2.Length) then
+            (list1,list2) |> succeed
+        else
+            { ErrorResponse.Message = Some "Error, vectors did not have the same number of components." } |> fail
+
+    let inline private validateTwoDimListLength<'T> (twoDim1:List<List<'T>>) (twoDim2:List<List<'T>>) =
+        if (twoDim1.Length = twoDim2.Length && twoDim1.Head.Length = twoDim2.Head.Length) then
+            (twoDim1,twoDim2) |> succeed
+        else
+            { ErrorResponse.Message = Some "Error, two dimensional matricies do not match each other." } |> fail
+
+    let inline private addListElements lists =
+        let (l1,l2) = lists
+        List.fold2 (fun acc x y -> List.append acc [x + y]) [] l1 l2
+
+    let inline private addListElementsSuccess lists = addListElements lists |> succeed
+    
+    let inline private subtractListElements lists =
+        let (l1,l2) = lists
+        List.fold2 (fun acc x y -> List.append acc [x - y]) [] l1 l2
+
+    let inline private subtractListElementsSuccess lists = subtractListElements lists |> succeed        
+
+    let inline private addTwoDimensionalListElements lists =
+        let (l1,l2) = lists
+        List.fold2 (fun acc x y -> List.append acc [addListElements(x,y)]) [] l1 l2 |> succeed
+
+    let inline private subtractTwoDimensionalListElements lists =
+        let (l1,l2) = lists
+        List.fold2 (fun acc x y -> List.append acc [subtractListElements(x,y)]) [] l1 l2 |> succeed
+
+    let inline addRowVectors vector1 vector2 =
+        match (vector1,vector2) with
+        | (RowVector v1, RowVector v2) ->
+            validateListLength v1 v2
+            >>= addListElementsSuccess
+            >>= createRowMatrix
+        | (_, _) -> { ErrorResponse.Message = Some "Not valid matricies for row vector addition." } |> fail
+
+    let inline addColumnVectors vector1 vector2 =
+        match (vector1,vector2) with
+        | (ColumnVector v1, ColumnVector v2) ->
+            validateListLength v1 v2
+            >>= addListElementsSuccess
+            >>= createColumnMatrix
+        | (_, _) -> { ErrorResponse.Message = Some "Not valid matricies for column vector addition." } |> fail
+
+    let inline addTwoDimMatricies matrix1 matrix2 =
+        match (matrix1,matrix2) with
+        | (TwoDimMatrix m1, TwoDimMatrix m2) ->
+            validateTwoDimListLength m1 m2
+            >>= addTwoDimensionalListElements
+            >>= createTwoDimMatrix
+        | (_,_) -> { ErrorResponse.Message = Some "Not supported matricies for Two Dimension addition." } |> fail
+
+    let inline matrixAddition m1 m2 =
+        match (m1,m2) with
+        | (RowVector rv1, RowVector rv2) -> addRowVectors (RowVector rv1) (RowVector rv2)
+        | (ColumnVector cv1, ColumnVector cv2) -> addColumnVectors (ColumnVector cv1) (ColumnVector cv2)
+        | (TwoDimMatrix td1, TwoDimMatrix td2) -> addTwoDimMatricies (TwoDimMatrix td1) (TwoDimMatrix td2)
+        | (_, _) -> { ErrorResponse.Message = Some "Not a supported addition." } |> fail
+
+    let (<+>) = matrixAddition
+
+    let inline subtractRowVectors vector1 vector2 =
+        match (vector1,vector2) with
+        | (RowVector v1, RowVector v2) ->
+            validateListLength v1 v2
+            >>= subtractListElementsSuccess
+            >>= createRowMatrix
+        | (_, _) -> { ErrorResponse.Message = Some "Not valid matricies for row vector subtraction." } |> fail
+        
+    let inline subtractColumnVectors vector1 vector2 =
+        match (vector1,vector2) with
+        | (ColumnVector v1, ColumnVector v2) ->
+            validateListLength v1 v2
+            >>= subtractListElementsSuccess
+            >>= createColumnMatrix
+        | (_, _) -> { ErrorResponse.Message = Some "Not valid matricies for column vector subtraction." } |> fail
+
+    let inline subtractTwoDimMatricies matrix1 matrix2 =
+        match (matrix1,matrix2) with
+        | (TwoDimMatrix m1, TwoDimMatrix m2) ->
+            validateTwoDimListLength m1 m2
+            >>= subtractTwoDimensionalListElements
+            >>= createTwoDimMatrix
+        | (_,_) -> { ErrorResponse.Message = Some "Not supported matricies for Two Dimension subtraction." } |> fail
+
+    let inline matrixSubtraction m1 m2 =
+        match (m1,m2) with
+        | (RowVector rv1, RowVector rv2) -> subtractRowVectors (RowVector rv1) (RowVector rv2)
+        | (ColumnVector cv1, ColumnVector cv2) -> subtractColumnVectors (ColumnVector cv1) (ColumnVector cv2)
+        | (TwoDimMatrix m1, TwoDimMatrix m2) -> subtractTwoDimMatricies (TwoDimMatrix m1) (TwoDimMatrix m2)
+        | (_, _) -> { ErrorResponse.Message = Some "Not a supported subtraction." } |> fail
+
+    let (<->) = matrixSubtraction
+
 
