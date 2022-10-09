@@ -6,33 +6,6 @@ open DataProcessing.MachineLearning
 
 module IncomeModeling =
 
-    type Data<'T> =
-        | Data of WeakMatrix<'T> * WeakMatrix<'T>
-        | EmptyData of List<List<'T>> * List<List<'T>>
-
-    type DataGrouping<'T> =
-        {
-        Training: Data<'T>
-        Validation: Data<'T>
-        }
-    
-    type Gender =
-        | Male of string
-        | Female of string
-
-    type Observation =
-        {
-        CreditLimit: int
-        Rating: int
-        NumOfCards: int
-        Education: int
-        Gender: Gender
-        Student: bool
-        Married: bool
-        Balance: int
-        Income: float
-        }
-
     let private transformCategories list =
         List.map (fun string ->
             if (string = "Male" || string = "No") then 0.0
@@ -65,14 +38,9 @@ module IncomeModeling =
         else
             let linesToSlice = int ((float lines.Length) * (float validationPercentage / float 100))
             let slicesToMake = lines.Length / linesToSlice
-            printfn "Slices to make: %A" slicesToMake
-            printfn "lines to slice: %A" linesToSlice
-
             let (result, slices) = ([], [1..slicesToMake]) ||> List.mapFold (fun acc sliceIndex ->
                 let startValidationIndex = if (sliceIndex = slicesToMake) then 0 else lines.Length - (sliceIndex * linesToSlice)
                 let endValidationIndex = startValidationIndex + linesToSlice - 1
-                printfn "StartValidationIndex: %A" startValidationIndex
-                printfn "EndValidationIndex: %A" endValidationIndex
                 (sliceIndex,makeSlice acc lines startValidationIndex endValidationIndex))
 
             (headers, slices) |> succeed
