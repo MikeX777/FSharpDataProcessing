@@ -259,7 +259,42 @@ module WeakMatrix =
         | (ColumnVector cv1, ColumnVector cv2) -> subtractColumnVectors (ColumnVector cv1) (ColumnVector cv2)
         | (TwoDimMatrix m1, TwoDimMatrix m2) -> subtractTwoDimMatricies (TwoDimMatrix m1) (TwoDimMatrix m2)
         | (_, _) -> { ErrorResponse.Message = Some "Not a supported subtraction." } |> fail
+    let inline reverseMatrixSubtraction m1 m2 = matrixSubtraction m2 m1
 
     let (<->) = matrixSubtraction
 
+    let inline applyScalar transformer matrix scalar =
+        match matrix with
+        | RowVector rv -> RowVector (rv |> List.map (fun x -> scalar |> transformer x))
+        | ColumnVector cv -> ColumnVector (cv |> List.map (fun x -> scalar |> transformer x))
+        | TwoDimMatrix m -> TwoDimMatrix (m |> List.map (fun y -> y |> List.map (fun x -> scalar |> transformer x)))
+        
+    let inline applyScalarResult transformer matrix scalar =
+        match matrix with
+        | RowVector rv -> RowVector (rv |> List.map (fun x -> scalar |> transformer x)) |> succeed
+        | ColumnVector cv -> ColumnVector (cv |> List.map (fun x -> scalar |> transformer x)) |> succeed
+        | TwoDimMatrix m -> TwoDimMatrix (m |> List.map (fun y -> y |> List.map (fun x -> scalar |> transformer x))) |> succeed
 
+    let inline private scalerAdd x y = x + y
+    let inline private scalerSubtract x y = x - y
+    let inline private scalarMultiply x y = x * y
+    let inline private scalarDivide x y = x / y
+
+    let inline scalarAddition matrix scalar = applyScalarResult scalerAdd matrix scalar 
+    let inline scalarSubtraction matrix scalar  = applyScalarResult scalerSubtract matrix scalar 
+    let inline scalarMultiplication matrix scalar = applyScalarResult scalarMultiply matrix scalar 
+    let inline scalarDivision matrix scalar = applyScalarResult scalarDivide matrix scalar 
+    
+    let inline reverseScalarAddition scalar matrix = applyScalarResult scalerAdd matrix scalar
+    let inline reverseScalarSubtraction scalar matrix = applyScalarResult scalerSubtract matrix scalar
+    let inline reverseScalarMultiplication scalar matrix = applyScalarResult scalarMultiply matrix scalar
+    let inline reverseScalarDivision scalar matrix = applyScalarResult scalarDivide matrix scalar
+
+    let (<+.>) = scalarAddition
+    let (<-.>) = scalarSubtraction
+    let (<*.>) = scalarMultiplication
+    let (</.>) = scalarDivision
+    let (<.+>) = reverseScalarAddition
+    let (<.->) = reverseScalarSubtraction
+    let (<.*>) = reverseScalarMultiplication
+    let (<./>) = reverseScalarDivision
