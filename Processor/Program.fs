@@ -16,7 +16,7 @@ let delimeterChar = ','
 let validationPercentage = 20
 let alpha = 0.00002
 let lambdas = [0.01; 0.1; 1.0; 10.0; 100.0; 1000.0; 10000.0]
-let idealLambda = 1.0
+let idealLambda = 0.01
 let iterations = 100000
 
 printfn "*****************************CONSTANTS*****************************"
