@@ -60,7 +60,16 @@ module DataPrinter =
         | Success s -> printFunc s
         | Error e -> $"Error before printing: {e.Message}\n"
 
-    
+    let inline printInputAndOutput output inputs =
+         String.concat "" (mapToCommaSeparatedSeq (List.append [output] inputs)) + "\n"
+
+    let inline printValidation validationInputs validationOutputs =
+        String.concat "" ((validationInputs, validationOutputs) ||> List.map2 (fun i o -> printInputAndOutput o i) |> List.toSeq)
+
+
+    let inline printFoldInfo lambda trainedWithValidation =
+        let (weights, validationInputs, validationOutputs) = trainedWithValidation
+        (printWeights lambda weights) + (printValidation validationInputs validationOutputs) + printEmptyLines
 
     let inline printRow row =
         sprintf "%A\n" row

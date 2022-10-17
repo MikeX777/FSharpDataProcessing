@@ -14,7 +14,7 @@ let seed = 1500
 let hasHeader = true
 let delimeterChar = ','
 let validationPercentage = 20
-let alpha = 0.00002
+let alpha = 0.00001
 let lambdas = [0.01; 0.1; 1.0; 10.0; 100.0; 1000.0; 10000.0]
 let idealLambda = 0.01
 let iterations = 100000
@@ -55,6 +55,8 @@ match (unfolded,folded) with
 | (Success u, Success f) ->
     let (headers, data) = u
 
+    let (inputHeaders, outputHeader) = getLastItemInList headers
+
     printfn "Training Deliverable 1!"
     let trainedUnfolded = lambdas |> List.map (fun l -> train seed iterations alpha l u)
 
@@ -64,7 +66,7 @@ match (unfolded,folded) with
     printfn "Training Deliverable 4!"
     let trainUnfoldedIdealScaling = train seed iterations alpha idealLambda u
     
-    let deliverable1Start = printDeliverable1Header + printHeaders headers.Tail
+    let deliverable1Start = printDeliverable1Header + printHeaders inputHeaders
     let deliverable1Data = (lambdas, trainedUnfolded) ||> List.map2 (fun l u ->
         match u with
         | Success weights -> unwrapAndPrintWeights l weights.Head.Weights
@@ -79,7 +81,7 @@ match (unfolded,folded) with
         | Error e -> $"Error with lamdba: {l}") |> List.toSeq
     let deliverable2Text = deliverable2Start + (String.concat "" deliverable2Data) + printEmptyLines
 
-    let deliverable4Start = printDeliverable4Header + printHeaders headers.Tail
+    let deliverable4Start = printDeliverable4Header + printHeaders inputHeaders
     let deliverable4Data =  match trainUnfoldedIdealScaling with
                             | Success weights -> unwrapAndPrintWeights idealLambda weights.Head.Weights
                             | Error e -> $"Error while training Deliverable4: {e}"

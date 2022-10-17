@@ -17,6 +17,17 @@ module IncomeModeling =
         let transformed = lines |> List.map (fun x -> transformCategories x)
         (headers, transformed) |> succeed
 
+    let inline getLastItemInList list =
+        let rec loop acc l =
+            match l with
+            | [] -> ([], [])
+            | h::t ->
+                if List.length t = 1 then
+                    (List.append acc [h], t)
+                else
+                    loop (List.append acc [h]) t
+        loop [] list
+
 
     let inline private makeSlice acc (lines:List<List<float>>) startValidationIndex endValidationIndex =
         if (startValidationIndex = 0) then
@@ -47,7 +58,9 @@ module IncomeModeling =
 
     let private extractOutputs matrix =
         match matrix with
-        | TwoDimMatrix l -> ((createTwoDimMatrix l.Tail), (createColumnMatrix l.Head)) |> succeed
+        | TwoDimMatrix l ->
+            let (inputs, outputs) = getLastItemInList l
+            ((createTwoDimMatrix inputs), (createColumnMatrix outputs[0])) |> succeed
         | _ -> { ErrorResponse.Message = Some "Error, matrix was not able a Two dimensional matrix. Could not extract outputs." } |> fail
 
     let private makeData inputAndOutputs =
